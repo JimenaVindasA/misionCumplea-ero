@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misión Cumpleañero</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c2c 50%, #6b3e3e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #2d5016;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .dino-emoji {
+            text-align: center;
+            font-size: 3em;
+            margin: 10px 0;
+        }
+
+        .level-indicator {
+            text-align: center;
+            color: #6b3e3e;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .riddle {
+            background: #f0f8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #4a7c2c;
+        }
+
+        .riddle-text {
+            color: #2d5016;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .hint-button {
+            background: linear-gradient(135deg, #6b3e3e, #4a2020);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+
+        .hint-button:hover {
+            transform: scale(1.05);
+        }
+
+        .hint-content {
+            display: none;
+            margin-top: 8px;
+            padding: 10px;
+            background: #ffe6e6;
+            border-radius: 6px;
+            border-left: 3px solid #6b3e3e;
+            color: #6b3e3e;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .hint-content.revealed {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #4a7c2c;
+            border-radius: 8px;
+            font-size: 1em;
+            margin: 10px 0;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #6b3e3e;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4a7c2c, #2d5016);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            color: #6b3e3e;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .intro-screen {
+            text-align: center;
+        }
+
+        .intro-message {
+            color: #2d5016;
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+
+        .victory-screen {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .victory-title {
+            color: #4a7c2c;
+            font-size: 2em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .victory-message {
+            color: #2d5016;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+
+        .final-message {
+            text-align: center;
+            color: #2d5016;
+            font-size: 1.3em;
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .anagram-letters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .letter-box {
+            width: 50px;
+            height: 50px;
+            background: #4a7c2c;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .letter-box:hover {
+            transform: scale(1.1);
+        }
+
+        .letter-box.selected {
+            background: #6b3e3e;
+            transform: scale(0.9);
+        }
+
+        .answer-display {
+            text-align: center;
+            font-size: 1.5em;
+            min-height: 40px;
+            margin: 20px 0;
+            color: #2d5016;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla de Inicio -->
+        <div id="intro" class="intro-screen">
+            <h1>🦕 Misión Cumpleañero 🦖</h1>
+            <div class="intro-message">
+                El juego consiste de cuatro niveles amorcito, cada nivel tiene las instrucciones necesarias para que puedas ir avanzando,
+                tú decides si abres todos los regalitos al final o cada vez que completas el nivel. <br><br>
+            </div>
+            <button onclick="startGame()">¡Empecemossss! 🦕</button>
+        </div>
+
+        <!-- Nivel 1a -->
+        <div id="level1a" class="level hidden">
+            <div class="level-indicator">Nivel 1</div>
+            <div class="level-indicator">Este nivel cuenta de tres acertijos, este 
+                y los siguientes dos son los que desbloquean regalos</div>
+            
+            <div class="riddle">
+                <div class="riddle-text">No se elige al empezar,
+                                        pero se elige cuidar.
+                                        No siempre entiende,
+                                        pero siempre está.</div>
+                <button class="hint-button" onclick="revealHint('hint1a')">💡 Ver Pista</button>
+                <div id="hint1a" class="hint-content">Pista: No es una persona, son varias…</div>
+            </div>
+            <input type="text" id="answer1a" placeholder="Respuesta de mi amorcito...">
+            <button onclick="checkLevel1a()">Verificar</button>
+            <div id="error1a" class="error hidden"></div>
+        </div>
+
+        <!-- Nivel 1b - Acertijo 1 -->
+        <div id="level1b" class="level hidden">
+            <div class="level-indicator">Nivel 1 - Acertijo para el primer regalito</div>
+            
+            <div class="riddle">
+                <div class="riddle-text">Que tiene en común el azúcar, los caramelos y los postres?</div>
+                <button class="hint-button" onclick="revealHint('hint1b')">💡 Ver Pista</button>
+                <div id="hint1b" class="hint-content">Pista: Mucho empalaga</div>
+            </div>
+            <input type="text" id="answer1b" placeholder="Respuesta de mi amorcito...">
+            <button onclick="checkLevel1b()">Verificar</button>
+            <div id="error1b" class="error hidden"></div>
+        </div>
+
+        <!-- Nivel 1c - Acertijo 2 -->
+        <div id="level1c" class="level hidden">
+            <div class="level-indicator">Nivel 1 - Acertijo para el segundo regalito</div>
+            
+            <div class="riddle">
+                <div class="riddle-text">Sin mí no te levantas, sin mí no entrenas, sin mí el día no empieza.</div>
+                <button class="hint-button" onclick="revealHint('hint1c')">💡 Ver Pista</button>
+                <div id="hint1c" class="hint-content">Pista: Los niños suelen tener mucha</div>
+            </div>
+            <input type="text" id="answer1c" placeholder="Respuesta de mi amorcito...">
+            <button onclick="checkLevel1c()">Verificar</button>
+            <div id="error1c" class="error hidden"></div>
+        </div>
+
+        <!-- Victoria Nivel 1 -->
+        <div id="victory1" class="victory-screen hidden">
+            <div class="dino-emoji">🎉</div>
+            <div class="victory-title">¡NIVEL 1 COMPLETADO!</div>
+            <div class="victory-message">
+                ¡Super duper amor! 🦕<br><br>
+                Amorcito estos regalitos te los mandan, el primer regalito es de parte de papi y el segundo es de parte de mami.<br>
+            </div>
+            <button onclick="goToLevel2()">Siguiente Nivel →</button>
+        </div>
+
+        <!-- Nivel 2 -->
+        <div id="level2" class="level hidden">
+            <div class="level-indicator">Nivel 2</div>
+            <div class="level-indicator">Último acertijo mi vida!</div>
+
+            <div class="riddle">
+                <div class="riddle-text">Tres letras, mil repeticiones.</div>
+                <button class="hint-button" onclick="revealHint('hint2')">💡 Ver Pista</button>
+                <div id="hint2" class="hint-content">Pista: No es casa ni trabajo, pero muchos van todos los días</div>
+            </div>
+            <input type="text" id="answer2" placeholder="Respuesta de mi amorcito...">
+            <button onclick="checkLevel2()">Verificar</button>
+            <div id="error2" class="error hidden"></div>
+        </div>
+
+        <!-- Victoria Nivel 2 -->
+        <div id="victory2" class="victory-screen hidden">
+            <div class="dino-emoji">🎉</div>
+            <div class="victory-title">¡NIVEL 2 COMPLETADO!</div>
+            <div class="victory-message">
+                ¡Increíble! 🦖<br><br>
+                Ahora siiii amooor, ya empezamos con los regalitos que te tengo yo, desbloqueaste el regalo más grande.<br>
+            </div>
+            <button onclick="goToLevel3()">Siguiente Nivel →</button>
+        </div>
+
+        <!-- Nivel 3 -->
+        <div id="level3" class="level hidden">
+            <div class="level-indicator">Nivel 3</div>
+
+            <div class="riddle">
+                <div class="riddle-text">Este tiene una dinámica un poco diferente, tienes que resolver un puzzle</div>
+                <div class="riddle-text" style="margin-top: 15px;">Cuando lo logres puedes pasar de nivel</div>
+            </div>
+            <button onclick="checkLevel3()">Tocar al completar el nivel</button>
+        </div>
+
+        <!-- Nivel 4 -->
+        <div id="level4" class="level hidden">
+            <div class="level-indicator">Nivel 4</div>
+            <div class="level-indicator">ULTIMOOO</div>
+
+            <div class="riddle">
+                <div class="riddle-text">Ordena las letras para formar la palabra correcta:</div>
+            </div>
+            
+            <div class="anagram-letters" id="anagramLetters"></div>
+            <div class="answer-display" id="answerDisplay">_ _ _ _ _ _</div>
+            
+            <button onclick="checkLevel4()">Verificar Palabra</button>
+            <button onclick="resetAnagram()" style="background: linear-gradient(135deg, #6b3e3e, #4a2020); margin-top: 5px;">Reiniciar</button>
+            <div id="error4" class="error hidden"></div>
+        </div>
+
+        <!-- Final -->
+        <div id="final" class="level hidden">
+            <div class="dino-emoji">🎉🦕🎂🦖🎉</div>
+            <div class="final-message">
+                ¡SUPER DUPER AMOOOOOOR!<br><br>
+                Te mereces lo mejor del mundo siempre, ganaste el ultimo regalito amoooor.<br><br>
+                <strong>¡Feliz cumple preciosooo! 💚</strong>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedLetters = [];
+        const letters = ['R', 'I', 'V', 'T', 'S', 'E'];
+        const correctWord = 'VESTIR';
+
+        function startGame() {
+            document.getElementById('intro').classList.add('hidden');
+            document.getElementById('level1a').classList.remove('hidden');
+        }
+
+        function revealHint(hintId) {
+            const hint = document.getElementById(hintId);
+            hint.classList.add('revealed');
+            event.target.style.display = 'none';
+        }
+
+        function normalize(str) {
+            return str.toLowerCase().trim()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function showError(elementId, message) {
+            const errorEl = document.getElementById(elementId);
+            errorEl.textContent = message;
+            errorEl.classList.remove('hidden');
+            setTimeout(() => errorEl.classList.add('hidden'), 3000);
+        }
+
+        function checkLevel1a() {
+            const answer = document.getElementById('answer1a').value;
+            if (normalize(answer) === 'familia') {
+                document.getElementById('level1a').classList.add('hidden');
+                document.getElementById('level1b').classList.remove('hidden');
+            } else {
+                showError('error1a', '¡Intenta de nuevo! 🦕');
+            }
+        }
+
+        function checkLevel1b() {
+            const answer = document.getElementById('answer1b').value;
+            if (normalize(answer) === 'dulce') {
+                document.getElementById('level1b').classList.add('hidden');
+                document.getElementById('level1c').classList.remove('hidden');
+            } else {
+                showError('error1b', '¡Intenta de nuevo! 🦕');
+            }
+        }
+
+        function checkLevel1c() {
+            const answer = document.getElementById('answer1c').value;
+            if (normalize(answer) === 'energia') {
+                document.getElementById('level1c').classList.add('hidden');
+                document.getElementById('victory1').classList.remove('hidden');
+            } else {
+                showError('error1c', '¡Intenta de nuevo! 🦕');
+            }
+        }
+
+        function goToLevel2() {
+            document.getElementById('victory1').classList.add('hidden');
+            document.getElementById('level2').classList.remove('hidden');
+        }
+
+        function checkLevel2() {
+            const answer = document.getElementById('answer2').value;
+            if (normalize(answer) === 'gym') {
+                document.getElementById('level2').classList.add('hidden');
+                document.getElementById('victory2').classList.remove('hidden');
+            } else {
+                showError('error2', '¡Intenta de nuevo! 🦕');
+            }
+        }
+
+        function goToLevel3() {
+            document.getElementById('victory2').classList.add('hidden');
+            document.getElementById('level3').classList.remove('hidden');
+        }
+
+        function checkLevel3() {
+            document.getElementById('level3').classList.add('hidden');
+            document.getElementById('level4').classList.remove('hidden');
+            initAnagram();
+        }
+
+        function initAnagram() {
+            const container = document.getElementById('anagramLetters');
+            container.innerHTML = '';
+            selectedLetters = [];
+            
+            const shuffled = [...letters].sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach((letter, index) => {
+                const box = document.createElement('div');
+                box.className = 'letter-box';
+                box.textContent = letter;
+                box.onclick = () => selectLetter(index, letter);
+                box.id = `letter-${index}`;
+                container.appendChild(box);
+            });
+            
+            updateDisplay();
+        }
+
+        function selectLetter(index, letter) {
+            const box = document.getElementById(`letter-${index}`);
+            
+            if (box.classList.contains('selected')) {
+                const letterIndex = selectedLetters.findIndex(l => l.index === index);
+                selectedLetters.splice(letterIndex, 1);
+                box.classList.remove('selected');
+            } else {
+                if (selectedLetters.length < 6) {
+                    selectedLetters.push({ letter, index });
+                    box.classList.add('selected');
+                }
+            }
+            
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const display = document.getElementById('answerDisplay');
+            const word = selectedLetters.map(l => l.letter).join('');
+            display.textContent = word || '_ _ _ _ _ _';
+        }
+
+        function resetAnagram() {
+            selectedLetters = [];
+            document.querySelectorAll('.letter-box').forEach(box => {
+                box.classList.remove('selected');
+            });
+            updateDisplay();
+        }
+
+        function checkLevel4() {
+            const word = selectedLetters.map(l => l.letter).join('');
+            
+            if (word === correctWord) {
+                document.getElementById('level4').classList.add('hidden');
+                document.getElementById('final').classList.remove('hidden');
+            } else {
+                showError('error4', '¡Esa no es la palabra correcta! Intenta de nuevo 🦕');
+            }
+        }
+    </script>
+</body>
+</html>
