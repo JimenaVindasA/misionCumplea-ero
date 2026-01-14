@@ -250,7 +250,7 @@
         <div id="level1a" class="level hidden">
             <div class="level-indicator">Nivel 1</div>
             <div class="level-indicator">Este nivel cuenta de tres acertijos, este 
-                y los siguientes dos son los que desbloquean regalos</div>
+                y los siguientes dos son los que desbloquean regalos. </div>
             
             <div class="riddle">
                 <div class="riddle-text">No se elige al empezar,
@@ -324,7 +324,7 @@
             <div class="dino-emoji">🎉</div>
             <div class="victory-title">¡NIVEL 2 COMPLETADO!</div>
             <div class="victory-message">
-                ¡Increíble! 🦖<br><br>
+                ¡Superrrrr! 🦖<br><br>
                 Ahora siiii amooor, ya empezamos con los regalitos que te tengo yo, desbloqueaste el regalo más grande.<br>
             </div>
             <button onclick="goToLevel3()">Siguiente Nivel →</button>
@@ -333,10 +333,11 @@
         <!-- Nivel 3 -->
         <div id="level3" class="level hidden">
             <div class="level-indicator">Nivel 3</div>
+            <div class="level-indicator">Nivel con dificultad más alta!</div>
 
             <div class="riddle">
-                <div class="riddle-text">Este tiene una dinámica un poco diferente, tienes que resolver un puzzle</div>
-                <div class="riddle-text" style="margin-top: 15px;">Cuando lo logres puedes pasar de nivel</div>
+                <div class="riddle-text">Este tiene una dinámica un poco diferente, tienes que resolver un puzzle.</div>
+                <div class="riddle-text" style="margin-top: 15px;">Cuando lo logres puedes pasar de nivel.</div>
             </div>
             <button onclick="checkLevel3()">Tocar al completar el nivel</button>
         </div>
@@ -344,7 +345,7 @@
         <!-- Nivel 4 -->
         <div id="level4" class="level hidden">
             <div class="level-indicator">Nivel 4</div>
-            <div class="level-indicator">ULTIMOOO</div>
+            <div class="level-indicator">ÚLTIMOOO</div>
 
             <div class="riddle">
                 <div class="riddle-text">Ordena las letras para formar la palabra correcta:</div>
@@ -363,7 +364,7 @@
             <div class="dino-emoji">🎉🦕🎂🦖🎉</div>
             <div class="final-message">
                 ¡SUPER DUPER AMOOOOOOR!<br><br>
-                Te mereces lo mejor del mundo siempre, ganaste el ultimo regalito amoooor.<br><br>
+                Te mereces lo mejor del mundo siempre, ganaste el último regalito amoooor.<br><br>
                 <strong>¡Feliz cumple preciosooo! 💚</strong>
             </div>
         </div>
@@ -510,7 +511,7 @@
                 document.getElementById('level4').classList.add('hidden');
                 document.getElementById('final').classList.remove('hidden');
             } else {
-                showError('error4', '¡Esa no es la palabra correcta! Intenta de nuevo 🦕');
+                showError('error4', 'Intenta de nuevo 🦕');
             }
         }
     </script>
